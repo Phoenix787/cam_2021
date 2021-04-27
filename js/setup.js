@@ -127,6 +127,15 @@ getWizardsFromServer();
 			
 		});
 
+		xhr.addEventListener('error', (evt) => {
+			onError('Произошла ошибка соединения');
+		});
+		xhr.addEventListener('timeout', (evt)=>{
+			onError('Запрос не успел исполниться за '+ xhr.timeout + " мс");
+		});
+
+		xhr.timeout = 1000;
+
 		xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
 		xhr.send();
 
@@ -217,6 +226,15 @@ getWizardsFromServer();
 		  colorFireball: hiddenWizardFireball.value
 		}
 	}
+
+	let form = document.querySelector('.setup-wizard-form');
+
+	form.addEventListener('submit', (evt) => {
+		window.upload(new FormData(form), (response) => {
+			setup.classList.add('hidden');
+		})
+	evt.preventDefault();
+	});
 
 
 	//валидация поля формы
