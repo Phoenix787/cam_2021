@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-	let ESC_KEYCODE = 'Escape';
-	let ENTER_KEYCODE = 'Enter';
+	const ESC_KEYCODE = 'Escape';
+	const ENTER_KEYCODE = 'Enter';
 
 	window.utils = {
 		isEscEvent: (evt, action) => {
