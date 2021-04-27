@@ -2,7 +2,7 @@
 
 (function () {
   let setup = document.querySelector(".setup");
-	let setupUserName = setup.querySelector(".setup-user-name");
+  let setupUserName = setup.querySelector(".setup-user-name");
 
   //логика связанная с генерацией похожих магов и настройкой
 
@@ -43,27 +43,32 @@
 
   let colorFireball = ["#ee4830", "#30a8ee", "#5ce6c0", "#e848d5", "#e6e848"];
 
-	const WIZARD_COUNT = 4;
+  const WIZARD_COUNT = 4;
 
-	let userWizardElement = document.querySelector('.wizard');
-	let setupWizardCoat = setup.querySelector(".wizard-coat");
+  let userWizardElement = document.querySelector(".wizard");
+  let setupWizardCoat = setup.querySelector(".wizard-coat");
   let setupWizardEyes = setup.querySelector(".wizard-eyes");
   let setupWizardFireball = setup.querySelector(".setup-fireball-wrap");
-	let hiddenWizardFireball = setup.querySelector('input[name="fireball-color"]');
-	let hiddenWizardEyesColor = setup.querySelector('input[name="eyes-color"]');
-	let hiddenWizardCoatColor = setup.querySelector('input[name="coat-color"]');
-
-
+  let hiddenWizardFireball = setup.querySelector(
+    'input[name="fireball-color"]'
+  );
+  let hiddenWizardEyesColor = setup.querySelector('input[name="eyes-color"]');
+  let hiddenWizardCoatColor = setup.querySelector('input[name="coat-color"]');
 
   // let wizards = generateWizards(names, lastNames, coatColor, colorEyes);
   //let wizards = getWizardsFromServer() || generateWizards(names, lastNames, coatColor, colorEyes);
-//  generateSimilarWizardsList();
+  //  generateSimilarWizardsList();
 
-let wizards = [];
-getWizardsFromServer();
+  let wizardsList = [];
+  //getWizardsFromServer();
 
-
-
+  window.load(
+    (wizards) => {
+      generateSimilarWizardsList(wizards);
+      wizardsList = wizards;
+    },
+    (message) => console.error(message)
+  );
 
   function generateWizards(names, lastNames, coats, eyes) {
     let result = [];
@@ -81,65 +86,64 @@ getWizardsFromServer();
     return result;
   }
 
-	function onSuccess(data) {
-		let list = null;
-		try{
-			list = JSON.parse(data);
-			generateSimilarWizardsList(list);
-			wizards = list;
-		} catch(e) {
-				throw new Error(e.message);
-		}
-	}
+  function onSuccess(data) {
+    let list = null;
+    try {
+      list = JSON.parse(data);
+      generateSimilarWizardsList(list);
+      wizards = list;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
 
-	function onError(error) {
-		console.error(error);
-	}
+  // function onError(error) {
+  // 	console.error(error);
+  // }
 
-	function getWizardsFromServer() {
-		let xhr = new XMLHttpRequest();
-		
+  // function getWizardsFromServer() {
+  // 	let xhr = new XMLHttpRequest();
 
-		xhr.addEventListener('load', () => {
-			let error;
+  // 	xhr.addEventListener('load', () => {
+  // 		let error;
 
-			switch (xhr.status) {
-				case 200:
-					onSuccess(xhr.responseText);					
-					break;
-					case 400:
-						error = 'Неправильный запрос';					
-						break;
-					case 401:
-						error = 'Пользователь  не авторизован';					
-						break;
-					case 404:
-						error = 'Ничего не найдено';					
-						break;
-				default:
-					error = "Статус ответа: " + xhr.status + ' ' + xhr.statusText;
-					break;
-			}
+  // 		switch (xhr.status) {
+  // 			case 200:
+  // 				onSuccess(xhr.responseText);
+  // 				break;
+  // 				case 400:
+  // 					error = 'Неправильный запрос';
+  // 					break;
+  // 				case 401:
+  // 					error = 'Пользователь  не авторизован';
+  // 					break;
+  // 				case 404:
+  // 					error = 'Ничего не найдено';
+  // 					break;
+  // 			default:
+  // 				error = "Статус ответа: " + xhr.status + ' ' + xhr.statusText;
+  // 				break;
+  // 		}
 
-			if (error) {
-				onError(error);
-			}
-			
-		});
+  // 		if (error) {
+  // 			onError(error);
+  // 		}
 
-		xhr.addEventListener('error', (evt) => {
-			onError('Произошла ошибка соединения');
-		});
-		xhr.addEventListener('timeout', (evt)=>{
-			onError('Запрос не успел исполниться за '+ xhr.timeout + " мс");
-		});
+  // 	});
 
-		xhr.timeout = 1000;
+  // 	xhr.addEventListener('error', (evt) => {
+  // 		onError('Произошла ошибка соединения');
+  // 	});
+  // 	xhr.addEventListener('timeout', (evt)=>{
+  // 		onError('Запрос не успел исполниться за '+ xhr.timeout + " мс");
+  // 	});
 
-		xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
-		xhr.send();
+  // 	xhr.timeout = 1000;
 
-	}
+  // 	xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
+  // 	xhr.send();
+
+  // }
 
   function renderWizard(wizard) {
     let wizardElement = template.cloneNode(true);
@@ -151,93 +155,89 @@ getWizardsFromServer();
     return wizardElement;
   }
 
-	
   function generateSimilarWizardsList(list) {
-		let items = similarList.querySelectorAll('.setup-similar-item');
-		if (items.length > 0) {
-			removeChilds(similarList);
-		}
-		
-		let fragment = document.createDocumentFragment();
-		
-    for (let i = 0; i < WIZARD_COUNT; i++) {
-			fragment.appendChild(renderWizard(list[i]));
+    let items = similarList.querySelectorAll(".setup-similar-item");
+    if (items.length > 0) {
+      removeChilds(similarList);
     }
-		
+
+    let fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < WIZARD_COUNT; i++) {
+      fragment.appendChild(renderWizard(list[i]));
+    }
+
     similarList.appendChild(fragment);
   }
 
-	function removeChilds(element) {
-		while(element.firstChild) {
-			element.removeChild(element.firstChild);
-		}
-	}
+  function removeChilds(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  }
 
+  function compareParameter(userWizardParameter, otherWizardParameter) {
+    return userWizardParameter === otherWizardParameter;
+  }
 
-	function compareParameter(userWizardParameter, otherWizardParameter) {
-		return userWizardParameter === otherWizardParameter
-	}
+  function updateSimiliarWizards(parameter) {
+    let userWizard = getUserWizard();
+    let similiars = [];
 
-	function updateSimiliarWizards(parameter) {
-		let userWizard = getUserWizard();
-		let similiars = [];
+    for (let i = 0; i < wizardsList.length; i++) {
+      if (compareParameter(userWizard[parameter], wizardsList[i][parameter])) {
+        similiars.push(wizardsList[i]);
+      }
+    }
+    if (similiars.length < WIZARD_COUNT) {
+      similiars = similiars.concat(wizardsList);
+    }
+    generateSimilarWizardsList(similiars);
+  }
+  //здесь логика настройки мага юзера
 
-		for(let i = 0; i < wizards.length; i++) {
-			if(compareParameter(userWizard[parameter], wizards[i][parameter])) {
-				similiars.push(wizards[i]);
-			} 
-		}
-		if (similiars.length < WIZARD_COUNT) {
-			similiars = similiars.concat(wizards);
-		}
-		generateSimilarWizardsList(similiars);
-	}
-  //здесь логика настройки мага юзера  
-	
   setupWizardCoat.addEventListener("click", () => {
-		setupWizardCoat.style.fill = coatColor[window.utils.getRandomElement(coatColor.length)];
-		hiddenWizardCoatColor.value = setupWizardCoat.style.fill;
-		updateSimiliarWizards("colorCoat");
+    setupWizardCoat.style.fill =
+      coatColor[window.utils.getRandomElement(coatColor.length)];
+    hiddenWizardCoatColor.value = setupWizardCoat.style.fill;
+    updateSimiliarWizards("colorCoat");
   });
-	
+
   setupWizardEyes.addEventListener("click", () => {
-		setupWizardEyes.style.fill = colorEyes[window.utils.getRandomElement(colorEyes.length)];
-		hiddenWizardEyesColor.value = setupWizardEyes.style.fill;
-		updateSimiliarWizards("colorEyes");
-
+    setupWizardEyes.style.fill =
+      colorEyes[window.utils.getRandomElement(colorEyes.length)];
+    hiddenWizardEyesColor.value = setupWizardEyes.style.fill;
+    updateSimiliarWizards("colorEyes");
   });
-	
+
   setupWizardFireball.addEventListener("click", () => {
-		setupWizardFireball.style.background =
-		colorFireball[window.utils.getRandomElement(colorFireball.length)];
-		hiddenWizardFireball.value = setupWizardFireball.style.background;
-		updateSimiliarWizards("colorFireball");
+    setupWizardFireball.style.background =
+      colorFireball[window.utils.getRandomElement(colorFireball.length)];
+    hiddenWizardFireball.value = setupWizardFireball.style.background;
+    updateSimiliarWizards("colorFireball");
   });
-	
+
   setupUserName.addEventListener("invalid", validityUserName);
-	
-	
-	function getUserWizard() {
-		
-		return {
-			name: setupUserName.value,
-		  colorCoat: hiddenWizardCoatColor.value,
-		  colorEyes: hiddenWizardEyesColor.value,
-		  colorFireball: hiddenWizardFireball.value
-		}
-	}
 
-	let form = document.querySelector('.setup-wizard-form');
+  function getUserWizard() {
+    return {
+      name: setupUserName.value,
+      colorCoat: hiddenWizardCoatColor.value,
+      colorEyes: hiddenWizardEyesColor.value,
+      colorFireball: hiddenWizardFireball.value,
+    };
+  }
 
-	form.addEventListener('submit', (evt) => {
-		window.upload(new FormData(form), (response) => {
-			setup.classList.add('hidden');
-		})
-	evt.preventDefault();
-	});
+  let form = document.querySelector(".setup-wizard-form");
 
+  form.addEventListener("submit", (evt) => {
+    window.upload(new FormData(form), () => {
+      setup.classList.add("hidden");
+    });
+    evt.preventDefault();
+  });
 
-	//валидация поля формы
+  //валидация поля формы
   function validityUserName(evt) {
     let message;
     if (setupUserName.validity.tooShort) {

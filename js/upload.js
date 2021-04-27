@@ -38,11 +38,12 @@
 					break;
 			}			
 		});
+		xhr.addEventListener('error', (evt) => {
+			onError('Произошла ошибка соединения');
+		});
 
 		xhr.open('POST', URL);
 		xhr.send(data);	
 	};
-	xhr.addEventListener('error', (evt) => {
-		onError('Произошла ошибка соединения');
-	});
+	
 })();
