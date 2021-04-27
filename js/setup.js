@@ -81,19 +81,53 @@ getWizardsFromServer();
     return result;
   }
 
-	function getWizardsFromServer() {
-		let xhr = new XMLHttpRequest();
+	function onSuccess(data) {
 		let list = null;
-
-		xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
-
-		xhr.addEventListener('load', () => {
-			
-			list = JSON.parse(xhr.responseText);
+		try{
+			list = JSON.parse(data);
 			generateSimilarWizardsList(list);
 			wizards = list;
+		} catch(e) {
+				throw new Error(e.message);
+		}
+	}
+
+	function onError(error) {
+		console.error(error);
+	}
+
+	function getWizardsFromServer() {
+		let xhr = new XMLHttpRequest();
+		
+
+		xhr.addEventListener('load', () => {
+			let error;
+
+			switch (xhr.status) {
+				case 200:
+					onSuccess(xhr.responseText);					
+					break;
+					case 400:
+						error = 'Неправильный запрос';					
+						break;
+					case 401:
+						error = 'Пользователь  не авторизован';					
+						break;
+					case 404:
+						error = 'Ничего не найдено';					
+						break;
+				default:
+					error = "Статус ответа: " + xhr.status + ' ' + xhr.statusText;
+					break;
+			}
+
+			if (error) {
+				onError(error);
+			}
+			
 		});
 
+		xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
 		xhr.send();
 
 	}
