@@ -8,13 +8,13 @@
 		EXTERNAL: 500
 	}
 
-	let onError = (message) => {
-		console.error(message);
-	}
+	// let onError = (message) => {
+	// 	console.error(message);
+	// }
 
 	let URL = 'https://javascript.pages.academy/code-and-magick';
 
-	window.upload = (data, onSuccess) => {
+	window.upload = (data, onSuccess, onError) => {
 		let xhr = new XMLHttpRequest();
 		xhr.responseType = 'json';
 

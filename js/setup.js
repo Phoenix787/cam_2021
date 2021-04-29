@@ -60,15 +60,12 @@
   //  generateSimilarWizardsList();
 
   let wizardsList = [];
-  //getWizardsFromServer();
 
-  window.load(
+  window.backend.load(
     (wizards) => {
       generateSimilarWizardsList(wizards);
       wizardsList = wizards;
-    },
-    (message) => console.error(message)
-  );
+    }, onError );
 
   function generateWizards(names, lastNames, coats, eyes) {
     let result = [];
@@ -97,53 +94,7 @@
     }
   }
 
-  // function onError(error) {
-  // 	console.error(error);
-  // }
 
-  // function getWizardsFromServer() {
-  // 	let xhr = new XMLHttpRequest();
-
-  // 	xhr.addEventListener('load', () => {
-  // 		let error;
-
-  // 		switch (xhr.status) {
-  // 			case 200:
-  // 				onSuccess(xhr.responseText);
-  // 				break;
-  // 				case 400:
-  // 					error = 'Неправильный запрос';
-  // 					break;
-  // 				case 401:
-  // 					error = 'Пользователь  не авторизован';
-  // 					break;
-  // 				case 404:
-  // 					error = 'Ничего не найдено';
-  // 					break;
-  // 			default:
-  // 				error = "Статус ответа: " + xhr.status + ' ' + xhr.statusText;
-  // 				break;
-  // 		}
-
-  // 		if (error) {
-  // 			onError(error);
-  // 		}
-
-  // 	});
-
-  // 	xhr.addEventListener('error', (evt) => {
-  // 		onError('Произошла ошибка соединения');
-  // 	});
-  // 	xhr.addEventListener('timeout', (evt)=>{
-  // 		onError('Запрос не успел исполниться за '+ xhr.timeout + " мс");
-  // 	});
-
-  // 	xhr.timeout = 1000;
-
-  // 	xhr.open('GET', 'https://javascript.pages.academy/code-and-magick/data');
-  // 	xhr.send();
-
-  // }
 
   function renderWizard(wizard) {
     let wizardElement = template.cloneNode(true);
@@ -231,9 +182,9 @@
   let form = document.querySelector(".setup-wizard-form");
 
   form.addEventListener("submit", (evt) => {
-    window.upload(new FormData(form), () => {
+    window.backend.save(new FormData(form), () => {
       setup.classList.add("hidden");
-    });
+    }, onError);
     evt.preventDefault();
   });
 
@@ -253,3 +204,17 @@
     setupUserName.setCustomValidity(message);
   }
 })();
+
+
+function onError(message) {
+	let divError = document.createElement('div');
+	divError.classList.add('error');
+	divError.textContent = message;
+
+	document.body.appendChild(divError);
+
+	setTimeout(() => {
+		divError.classList.add('hidden');
+
+	}, 6000);
+}

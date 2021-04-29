@@ -1,3 +1,4 @@
+@import url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css');
 html,
 body {
   margin: 0;
@@ -811,4 +812,23 @@ input[type=radio]:checked + .review-mark-label {
   font-weight: bold;
   font-size: 14px;
   color: #ffffff;
+}
+
+.error {
+	margin: 10px 0;
+	padding: 12px;
+	color: #d8000c;
+	background-color: #ffd2d2;
+	top: 0;
+	left: 0;
+	position: absolute;
+}
+
+.error::before {
+	font-weight: 900;
+	margin-right: 10px;
+	content: '\f119';
+	display: inline-block;
+  font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands';
+ 
 }
