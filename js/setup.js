@@ -132,19 +132,20 @@
 function setRank(list) {
 	
 	let userWizard = getUserWizard();
-	for (let i = 0; i < list.length; i++) {
+
+	list.forEach((item) => {
 		let rank = 0;
-		if (compareParameter(userWizard["colorCoat"], list[i]["colorCoat"])) {
+		if (compareParameter(userWizard["colorCoat"], item["colorCoat"])) {
 			rank += 3;			
 		}
-		if (compareParameter(userWizard["colorEyes"], list[i]["colorEyes"])) {
+		if (compareParameter(userWizard["colorEyes"], item["colorEyes"])) {
 			rank += 2;
 		}
-		if (compareParameter(userWizard["colorFireball"], list[i]["colorFireball"])) {
+		if (compareParameter(userWizard["colorFireball"], item["colorFireball"])) {
 			rank += 1;
 		}
-		list[i]['similiarRank'] = rank;
-	}
+		item['similiarRank'] = rank;
+	});
 }
 
   function compareParameter(userWizardParameter, otherWizardParameter) {
