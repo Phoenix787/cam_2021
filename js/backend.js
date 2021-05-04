@@ -1,7 +1,7 @@
 
 (function() {
 
-	let serverCode = {
+	let ServerCode = {
 		SUCCESS: 200,
 		BAD_REQUEST: 400,
 		UNAUTHORIZED: 401,
@@ -9,7 +9,7 @@
 		SERVER_ERROR: 500
 	}
 
-	let url = {
+	let Url = {
 		LOAD: 'https://javascript.pages.academy/code-and-magick/data',
 		UPLOAD: 'https://javascript.pages.academy/code-and-magick'
 	}
@@ -22,19 +22,19 @@ function createXmlHttpRequest(onSuccess, onError) {
 
 	xhr.addEventListener('load', () => {
 		switch (xhr.status) {
-			case serverCode.SUCCESS:
+			case ServerCode.SUCCESS:
 				onSuccess(xhr.response);
 				break;
-			case serverCode.BAD_REQUEST:
+			case ServerCode.BAD_REQUEST:
 				onError('Неправильный запрос');
 				break;
-			case serverCode.UNAUTHORIZED:
+			case ServerCode.UNAUTHORIZED:
 				onError('Пользователь не авторизован');
 				break;
-			case serverCode.NOT_FOUND:
+			case ServerCode.NOT_FOUND:
 				onError('Запрашиваемый ресурс не найден');
 				break;
-			case serverCode.SERVER_ERROR:
+			case ServerCode.SERVER_ERROR:
 				onError('Ошибка сервера');
 				break;
 		
@@ -49,13 +49,13 @@ function createXmlHttpRequest(onSuccess, onError) {
 
 	function load(onSuccess, onError) {
 		let xhr = createXmlHttpRequest(onSuccess, onError);
-		xhr.open('GET', url.LOAD);
+		xhr.open('GET', Url.LOAD);
 		xhr.send();
 	}
 
 	function save(data, onSuccess, onError) {
 		let xhr = createXmlHttpRequest(onSuccess, onError);
-		xhr.open('POST', url.UPLOAD);
+		xhr.open('POST', Url.UPLOAD);
 		xhr.send(data);	
 	}
 
