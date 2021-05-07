@@ -61,11 +61,11 @@
 
   let wizardsList = [];
 
-  window.backend.load(
-    (wizards) => {
-      generateSimilarWizardsList(wizards);
-      wizardsList = wizards;
-    }, onError );
+  window.backend.load((wizards) => {
+    generateSimilarWizardsList(wizards);
+		//window.render(wizards);
+    wizardsList = wizards;
+  }, onError);
 
   function generateWizards(names, lastNames, coats, eyes) {
     let result = [];
@@ -94,8 +94,6 @@
     }
   }
 
-
-
   function renderWizard(wizard) {
     let wizardElement = template.cloneNode(true);
     wizardElement.querySelector(".setup-similar-label").textContent =
@@ -107,46 +105,66 @@
   }
 
   function generateSimilarWizardsList(list) {
-    let items = similarList.querySelectorAll(".setup-similar-item");
-    if (items.length > 0) {
-      removeChilds(similarList);
-    }
+    // let items = similarList.querySelectorAll(".setup-similar-item");
+    // if (items.length > 0) {
+    //   removeChilds(similarList);
+    // }
 
-    let fragment = document.createDocumentFragment();
-		setRank(list);		
-		list.sort((a, b) => b.similiarRank - a.similiarRank);
-		//console.log(list);
+		window.render(list.sort((left, right) => getRank(right) - getRank(left)));
+    // let fragment = document.createDocumentFragment();
+    // setRank(list);
+    // list.sort((a, b) => b.similiarRank - a.similiarRank);
+    
+    // for (let i = 0; i < WIZARD_COUNT; i++) {
+    //   fragment.appendChild(renderWizard(list[i]));
+    // }
 
-    for (let i = 0; i < WIZARD_COUNT; i++) {
-      fragment.appendChild(renderWizard(list[i]));
-    }
+    // similarList.appendChild(fragment);
 
-    similarList.appendChild(fragment);
-		function removeChilds(element) {
-			while (element.firstChild) {
-				element.removeChild(element.firstChild);
-			}
-		}
+    // function removeChilds(element) {
+    //   while (element.firstChild) {
+    //     element.removeChild(element.firstChild);
+    //   }
+    // }
   }
 
-function setRank(list) {
-	
-	let userWizard = getUserWizard();
-
-	list.forEach((item) => {
+	function getRank(wizard) {
 		let rank = 0;
-		if (compareParameter(userWizard["colorCoat"], item["colorCoat"])) {
-			rank += 3;			
-		}
-		if (compareParameter(userWizard["colorEyes"], item["colorEyes"])) {
+		let original = getUserWizard();
+
+		if(original.colorCoat === wizard.colorCoat){
 			rank += 2;
 		}
-		if (compareParameter(userWizard["colorFireball"], item["colorFireball"])) {
+		if(original.colorEyes === wizard.colorEyes){
 			rank += 1;
 		}
-		item['similiarRank'] = rank;
-	});
-}
+		if (original.colorFireball === wizard.colorFireball) {
+			rank += 1;
+		}
+		return rank;
+	}
+
+	
+
+  function setRank(list) {
+    let userWizard = getUserWizard();
+
+    list.forEach((item) => {
+      let rank = 0;
+      if (compareParameter(userWizard["colorCoat"], item["colorCoat"])) {
+        rank += 3;
+      }
+      if (compareParameter(userWizard["colorEyes"], item["colorEyes"])) {
+        rank += 2;
+      }
+      if (
+        compareParameter(userWizard["colorFireball"], item["colorFireball"])
+      ) {
+        rank += 1;
+      }
+      item["similiarRank"] = rank;
+    });
+  }
 
   function compareParameter(userWizardParameter, otherWizardParameter) {
     return userWizardParameter === otherWizardParameter;
@@ -172,24 +190,24 @@ function setRank(list) {
     setupWizardCoat.style.fill =
       coatColor[window.utils.getRandomElement(coatColor.length)];
     hiddenWizardCoatColor.value = setupWizardCoat.style.fill;
-   // updateSimiliarWizards("colorCoat");
-	 generateSimilarWizardsList(wizardsList);
+    // updateSimiliarWizards("colorCoat");
+    generateSimilarWizardsList(wizardsList);
   });
 
   setupWizardEyes.addEventListener("click", () => {
     setupWizardEyes.style.fill =
       colorEyes[window.utils.getRandomElement(colorEyes.length)];
     hiddenWizardEyesColor.value = setupWizardEyes.style.fill;
-   // updateSimiliarWizards("colorEyes");
-	 generateSimilarWizardsList(wizardsList);
+    // updateSimiliarWizards("colorEyes");
+    generateSimilarWizardsList(wizardsList);
   });
 
   setupWizardFireball.addEventListener("click", () => {
     setupWizardFireball.style.background =
       colorFireball[window.utils.getRandomElement(colorFireball.length)];
     hiddenWizardFireball.value = setupWizardFireball.style.background;
-   // updateSimiliarWizards("colorFireball");
-	 generateSimilarWizardsList(wizardsList);
+    // updateSimiliarWizards("colorFireball");
+    generateSimilarWizardsList(wizardsList);
   });
 
   setupUserName.addEventListener("invalid", validityUserName);
@@ -206,9 +224,13 @@ function setRank(list) {
   let form = document.querySelector(".setup-wizard-form");
 
   form.addEventListener("submit", (evt) => {
-    window.backend.save(new FormData(form), () => {
-      setup.classList.add("hidden");
-    }, onError);
+    window.backend.save(
+      new FormData(form),
+      () => {
+        setup.classList.add("hidden");
+      },
+      onError
+    );
     evt.preventDefault();
   });
 
@@ -229,16 +251,14 @@ function setRank(list) {
   }
 })();
 
-
 function onError(message) {
-	let divError = document.createElement('div');
-	divError.classList.add('error');
-	divError.textContent = message;
+  let divError = document.createElement("div");
+  divError.classList.add("error");
+  divError.textContent = message;
 
-	document.body.appendChild(divError);
+  document.body.appendChild(divError);
 
-	setTimeout(() => {
-		divError.classList.add('hidden');
-
-	}, 6000);
+  setTimeout(() => {
+    divError.classList.add("hidden");
+  }, 6000);
 }
