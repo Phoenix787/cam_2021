@@ -105,12 +105,16 @@
   }
 
   function generateSimilarWizardsList(list) {
+		window.render(list.sort((left, right) => getRank(right) - getRank(left)));
+
+
+
+		
     // let items = similarList.querySelectorAll(".setup-similar-item");
     // if (items.length > 0) {
     //   removeChilds(similarList);
     // }
 
-		window.render(list.sort((left, right) => getRank(right) - getRank(left)));
     // let fragment = document.createDocumentFragment();
     // setRank(list);
     // list.sort((a, b) => b.similiarRank - a.similiarRank);
@@ -133,7 +137,7 @@
 		let original = getUserWizard();
 
 		if(original.colorCoat === wizard.colorCoat){
-			rank += 2;
+			rank += 3;
 		}
 		if(original.colorEyes === wizard.colorEyes){
 			rank += 1;
