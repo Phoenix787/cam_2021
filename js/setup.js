@@ -45,26 +45,23 @@
 
   const WIZARD_COUNT = 4;
 
-  let userWizardElement = document.querySelector(".wizard");
-  let setupWizardCoat = setup.querySelector(".wizard-coat");
-  let setupWizardEyes = setup.querySelector(".wizard-eyes");
-  let setupWizardFireball = setup.querySelector(".setup-fireball-wrap");
+ 
+  // let setupWizardCoat = setup.querySelector(".wizard-coat");
+  // let setupWizardEyes = setup.querySelector(".wizard-eyes");
+  // let setupWizardFireball = setup.querySelector(".setup-fireball-wrap");
   let hiddenWizardFireball = setup.querySelector(
     'input[name="fireball-color"]'
   );
   let hiddenWizardEyesColor = setup.querySelector('input[name="eyes-color"]');
   let hiddenWizardCoatColor = setup.querySelector('input[name="coat-color"]');
 
-  // let wizards = generateWizards(names, lastNames, coatColor, colorEyes);
-  //let wizards = getWizardsFromServer() || generateWizards(names, lastNames, coatColor, colorEyes);
-  //  generateSimilarWizardsList();
-
+ 
   let wizardsList = [];
 
-  window.backend.load((wizards) => {
-    generateSimilarWizardsList(wizards);
+  window.backend.load((wizards) => { //*-> successHandler
 		//window.render(wizards);
-    wizardsList = wizards;
+    wizardsList = wizards; //<-*
+    generateSimilarWizardsList();
   }, onError);
 
   function generateWizards(names, lastNames, coats, eyes) {
@@ -104,8 +101,32 @@
     return wizardElement;
   }
 
-  function generateSimilarWizardsList(list) {
-		window.render(list.sort((left, right) => getRank(right) - getRank(left)));
+	// window.wizard.onCoatChange = (color) => {
+	// 	hiddenWizardCoatColor.value = color;
+	
+	// 	window.debounce(generateSimilarWizardsList);
+	// }
+
+	window.wizard.onCoatChange = window.debounce((color) => {
+		
+			hiddenWizardCoatColor.value = color;		
+			generateSimilarWizardsList();
+		
+	});
+
+	window.wizard.onEyesChange = (color) => {
+		hiddenWizardEyesColor.value = color;
+	//	generateSimilarWizardsList();
+	window.debounce(generateSimilarWizardsList);
+	}
+	window.wizard.onFireballChange = (color) => {
+		hiddenWizardFireball.value = color;
+		window.debounce(generateSimilarWizardsList);
+	//	generateSimilarWizardsList();
+	}
+
+  function generateSimilarWizardsList() {
+		window.render(wizardsList.slice().sort((left, right) => getRank(right) - getRank(left)));
 
 
 
@@ -190,29 +211,30 @@
   }
   //здесь логика настройки мага юзера
 
-  setupWizardCoat.addEventListener("click", () => {
-    setupWizardCoat.style.fill =
-      coatColor[window.utils.getRandomElement(coatColor.length)];
-    hiddenWizardCoatColor.value = setupWizardCoat.style.fill;
-    // updateSimiliarWizards("colorCoat");
-    generateSimilarWizardsList(wizardsList);
-  });
+  // setupWizardCoat.addEventListener("click", () => {
+  //   setupWizardCoat.style.fill =
+  //     coatColor[window.utils.getRandomElement(coatColor.length)];
+  //   hiddenWizardCoatColor.value = setupWizardCoat.style.fill;
+  //   // updateSimiliarWizards("colorCoat");
+	// 	window.debounce(generateSimilarWizardsList);
+	
+  // });
 
-  setupWizardEyes.addEventListener("click", () => {
-    setupWizardEyes.style.fill =
-      colorEyes[window.utils.getRandomElement(colorEyes.length)];
-    hiddenWizardEyesColor.value = setupWizardEyes.style.fill;
-    // updateSimiliarWizards("colorEyes");
-    generateSimilarWizardsList(wizardsList);
-  });
+  // setupWizardEyes.addEventListener("click", () => {
+  //   setupWizardEyes.style.fill =
+  //     colorEyes[window.utils.getRandomElement(colorEyes.length)];
+  //   hiddenWizardEyesColor.value = setupWizardEyes.style.fill;
+  //   // updateSimiliarWizards("colorEyes");
+	// 	window.setTimeout(() => generateSimilarWizardsList(), 300);
+  // });
 
-  setupWizardFireball.addEventListener("click", () => {
-    setupWizardFireball.style.background =
-      colorFireball[window.utils.getRandomElement(colorFireball.length)];
-    hiddenWizardFireball.value = setupWizardFireball.style.background;
-    // updateSimiliarWizards("colorFireball");
-    generateSimilarWizardsList(wizardsList);
-  });
+  // setupWizardFireball.addEventListener("click", () => {
+  //   setupWizardFireball.style.background =
+  //     colorFireball[window.utils.getRandomElement(colorFireball.length)];
+  //   hiddenWizardFireball.value = setupWizardFireball.style.background;
+  //   // updateSimiliarWizards("colorFireball");
+  //   window.setTimeout(() => generateSimilarWizardsList(), 300);
+  // });
 
   setupUserName.addEventListener("invalid", validityUserName);
 

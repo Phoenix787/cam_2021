@@ -815,13 +815,16 @@ input[type=radio]:checked + .review-mark-label {
 }
 
 .error {
-	margin: 10px 0;
+	margin: 0 auto;
 	padding: 12px;
 	color: #d8000c;
+	font-size: 30px;
 	background-color: #ffd2d2;
+	text-align: center;
 	top: 0;
 	left: 0;
 	position: absolute;
+	z-index: 100;
 }
 
 .error::before {
